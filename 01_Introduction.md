@@ -1,4 +1,8 @@
-# 1. Introduction to RNA-seq (Overview)
+# Before class
+
+This workshop is developed based on the [RNA-seq Bioinformatics Course](https://rnabio.org/) by the [Griffith Lab](https://griffithlab.org/) at Washington University, with the help from [ChatGPT](https://chatgpt.com/).
+
+# Introduction to RNA-seq (Overview)
 
 ## What is RNA-Seq Analysis?
 
@@ -59,11 +63,6 @@ __Attention!! - RNA-seq is not working on RNA directly but cDNA, here's why:__
     * Investigating __gene expression dynamics__ at the single-cell level during processes like differentiation, immune responses, or disease progression. 
 * Data interpretation is more challenging and involves clustering cells based on expression profiles, examining the relationships between cells, and understanding the underlying biological processes at a much higher resolution. 
 
-
-
-
-
-
 | Feature                | **Bulk RNA-seq**                            | **Single-cell RNA-seq**                      |
 |------------------------|---------------------------------------------|---------------------------------------------|
 | **Sample Composition**  | Population of cells (averaged data)        | Individual cells (high-resolution data)     |
@@ -72,7 +71,107 @@ __Attention!! - RNA-seq is not working on RNA directly but cDNA, here's why:__
 | **Rare Cell Types**     | May miss rare cell populations              | Can identify rare cell populations          |
 | **Applications**        | General gene expression comparison          | Identifying cell subtypes, dynamics, and heterogeneity |
 
+# Before the analyses
 
+Should write about how the experimental design, library prepare, and sequencing technology used can influnce our downstream analyses, such as the use of different pipelines and software, quality control etc.... 
+
+There are many RNA-seq library construction strategies. 
+
+# General Steps of RNA-seq Analysis
+
+1. 
+2. 
+3. 
+4. 
+5. 
+
+# Types of RNA-seq Analysis  
+
+RNA-seq is a versatile technology with diverse applications, and the specifics of experimental design, library preparation, sequencing technology, and downstream analysis vary significantly based on the research goal.
+
+We will focus on the easiest one in this workshop, differential gene expression (DEG) analysis.
+
+## 1. Differential Gene Expression (DEG) Analysis
+
+* __Goal__: Compare gene expression levels between conditions (e.g., treated vs. untreated, diseased vs. healthy).
+* __Design__: Biological replicates are critical. 
+* __Library Prep__: Typically uses poly(A) enrichment or rRNA depletion for mRNA-focused studies. 
+* __Sequencing__: Moderate depth (20-50M reads per sample) is sufficient. 
+* __Downstream Analysis__: 
+    * Alignment tools: STAR, HISAT2.
+    * Differential gene expression tools: DESeq2, edgeR.
+
+## 2. Transcript Isoform Analysis
+
+* __Goal__: Detect alternative splicing, isoform usage, or novel transcripts. 
+* __Design__: High sequencing depth for robust isoform detection. 
+* __Library Prep__: Use protocols that preserve strand information (e.g., stranded RNA-seq).
+* __Sequencing__: Paired-end sequencing with ~150bp reads.
+* __Downstream Analysis__:
+    * Tools: StringTie, Cufflinks, or IsoQuant.
+    * Focus: Identify isoforms, splicing junctions, and exon usage. 
+
+## 3. Single-cell RNA-seq
+
+* __Goal__: Investigate gene expression at the resolution of individual cells. 
+* __Design__: Optimise for cell capture efficiency and number of cells. 
+* __Library Prep__: Droplet-based methods (e.g., 10x Genomics) or plate-based methods (e.g., Smart-seq2).
+* __Sequencing__: Shallow sequencing per cell (~50K-100K reads per cell) but many cells (>10,000).
+* __Downstream Analysis__: 
+    * Tools: Seurat, Scanpy, or Monocle.
+    * Focus: Clustering, trajectory analysis, cell type identification. 
+
+## 4. Small RNA Analysis:
+
+* __Goal__: Study non-coding RNAs (e.g., miRNAs, siRNAs).
+* __Design__: Small RNA-specific library prep kits.
+* __Library Prep__: 
+
+
+
+
+# ---------------------------------
+
+
+### 1. Experimental Design
+
+* __Biological Replicates:__ Ensure enough replicates for robust statistical analysis. 
+* __Treatment Conditions:__ Plan comparisons (e.g., control vs. treated).
+* __Sequencing Depth:__ Decide the number of reads needed based on the complexity of the transcriptome. 
+
+### 2. RNA Extraction and Library Preparation
+
+* __RNA Extraction:__ Isolate high-quality RNA from cells or tissues. 
+* __Quality Control:__ Assess RNA integrity (e.g., using a Bioanalyser).
+* __Library Preparation:__ Convert RNA to cDNA, fragment it, and add sequencing adapters. 
+
+### 3. Sequencing
+
+* Use high-throughput sequencing platforms (e.g., Illumina) to generate millions of short reads. 
+
+
+......
+
+# Common Analysis Goals 
+
+* Gene expression and differential expression
+* Alternative expression analysis
+* Transcript discovery and annotation
+* Allele specific expression (relating to SNPs or mutations)
+* Mutation discovery
+* Fusion detection
+* RNA editing
+
+# General themes of RNA-seq workflows
+
+* Each type of RNA-seq analysis has distinct requirements and challenges but also a common theme:
+    1. Obtain raw data
+    2. Align/asemble reads
+    3. Process alignment with a tool specific to the goal (e.g., `cufflinks` for expression analysis, `defuse` for fusion detection, etc.)
+    4. Post process (import into downstream software, e.g., R and Matlab)
+    5. Summarise and visualise (create gene lists, prioritise candidates for validation etc.)
+
+# --------------------------------------------------------
 
 # 2. Bulk RNA-seq Analysis Workflow
 
@@ -111,21 +210,7 @@ __Attention!! - RNA-seq is not working on RNA directly but cDNA, here's why:__
 
 ## Steps in RNA-Seq Analysis
 
-### 1. Experimental Design
-
-* __Biological Replicates:__ Ensure enough replicates for robust statistical analysis. 
-* __Treatment Conditions:__ Plan comparisons (e.g., control vs. treated).
-* __Sequencing Depth:__ Decide the number of reads needed based on the complexity of the transcriptome. 
-
-### 2. RNA Extraction and Library Preparation
-
-* __RNA Extraction:__ Isolate high-quality RNA from cells or tissues. 
-* __Quality Control:__ Assess RNA integrity (e.g., using a Bioanalyser).
-* __Library Preparation:__ Convert RNA to cDNA, fragment it, and add sequencing adapters. 
-
-### 3. Sequencing
-
-* Use high-throughput sequencing platforms (e.g., Illumina) to generate millions of short reads. 
+?
 
 ### 4. Quality Control of Raw Data 
 
@@ -183,3 +268,10 @@ __Attention!! - RNA-seq is not working on RNA directly but cDNA, here's why:__
 ## How long are transcripts?
 
 ...
+
+# Introduction to Linux Commands
+
+...
+
+# Data 
+
