@@ -24,7 +24,18 @@ RNA-seq is a versatile technology with diverse applications, and the specifics o
 
 __Summary of applications and which one we are focusing on?__
 
-* Differential gene expression (DGE)
+* Differential gene expression (DGE) analysis
+* Single-cell RNA-seq analysis
+* Transcript isoform analysis 
+* Small RNA analysis
+* De novo transcriptome assembly 
+* RNA editing and modifications
+* Fusion gene detection 
+* Metatranscriptomics
+
+__In this workshop, we will be focusing on differential gene expression analysis and single-cell RNA-seq analysis.__
+
+__Below are examples of how different the steps are for different types of analyses.__
 
 ## Differential Gene Expression (DEG) Analysis
 
@@ -36,16 +47,6 @@ __Summary of applications and which one we are focusing on?__
     * Alignment tools: STAR, HISAT2.
     * Differential gene expression tools: DESeq2, edgeR.
 
-## Transcript Isoform Analysis
-
-* __Goal__: Detect alternative splicing, isoform usage, or novel transcripts. 
-* __Design__: High sequencing depth for robust isoform detection. 
-* __Library Prep__: Use protocols that preserve strand information (e.g., stranded RNA-seq).
-* __Sequencing__: Paired-end sequencing with ~150bp reads.
-* __Downstream Analysis__:
-    * Tools: StringTie, Cufflinks, or IsoQuant.
-    * Focus: Identify isoforms, splicing junctions, and exon usage. 
-
 ## Single-cell RNA-seq
 
 * __Goal__: Investigate gene expression at the resolution of individual cells. 
@@ -56,6 +57,16 @@ __Summary of applications and which one we are focusing on?__
     * Tools: Seurat, Scanpy, or Monocle.
     * Focus: Clustering, trajectory analysis, cell type identification. 
 
+## Transcript Isoform Analysis
+
+* __Goal__: Detect alternative splicing, isoform usage, or novel transcripts. 
+* __Design__: High sequencing depth for robust isoform detection. 
+* __Library Prep__: Use protocols that preserve strand information (e.g., stranded RNA-seq).
+* __Sequencing__: Paired-end sequencing with ~150bp reads.
+* __Downstream Analysis__:
+    * Tools: StringTie, Cufflinks, or IsoQuant.
+    * Focus: Identify isoforms, splicing junctions, and exon usage. 
+
 ## Small RNA Analysis
 
 * __Goal__: Study non-coding RNAs (e.g., miRNAs, siRNAs).
@@ -65,13 +76,6 @@ __Summary of applications and which one we are focusing on?__
 * __Downstream Analysis__:
     * Tools: miRDeep, miRBase.
     * Focus: miRNA quantification and novel miRNA discovery. 
-
-## Other Types of RNA-seq Analyses 
-
-* De novo transcriptome assembly 
-* RNA editing and modifications
-* Fusion gene detection 
-* Metatranscriptomics
 
 # General computational steps of RNA-seq workflows
 
@@ -94,10 +98,6 @@ Each type of RNA-seq analysis has distinct requirements and challenges but also 
 * To check read quality, adapter contamination, GC content, etc.
 * Tools: `FastQC`, `MultiQC`
 
-__What is adapter contamination?__
-
-Adapter contamination refers to the presence of adapter sequences in RNA-seq reads that were not fully removed during the library preparation process. Adapters are short, synthetic DNA sequences that are ligated to RNA or cDNA fragments during library preparation to facilitate sequencing. They are essential for binding the fragments to the sequencing platform and allow for amplification and sequencing. However, sometimes fragments of RNA or cDNA are too short, and the sequencing process reads into the adapter sequence. This results in "adapter contamination" in the sequencing data. 
-
 ### Trimming 
 
 * To remove low-quality bases and adapter sequences. 
@@ -110,7 +110,46 @@ Adapter contamination refers to the presence of adapter sequences in RNA-seq rea
 * Pseudo-alignment: `Kallisto`, `Salmon` for faster processing.
 * Outputs: SAM/BAM files (aligned reads). 
 
-__When to align to genome and when to align to transcriptome?__
+### Read Quantification
+
+* To count reads that mapped to genes or transcripts to generate a count matrix. 
+* Tools: `HTSeq`, `featureCounts`
+
+### Normalisation
+
+* Normalise counts to correct for sequencing depth and library size.
+* Tools: Built into `DESeq2`, `edgeR`, or `limma`.
+
+### Differential Gene Expression (DGE) Analysis
+
+* To identify genes that are differentially expressed between experimental conditions. 
+* Tools: `DESeq2`, `edgeR`, or `limma`.
+
+### Functional Annotation and Enrichment
+
+* Perform Gene Ontology (GO) or KEGG pathway analysis to interpret biological significance. 
+* Tools: `DAVID`, `clusterProfiler`, `GOseq`.
+
+### Visualisation
+
+* Visulaise results with PCA, heatmaps, volcano plots, and more. 
+* Tools: `ggplot2`, `pheatmap`, `Seurat`.
+
+# Other questions that can help you understand
+
+## What is Sequencing Depth?
+
+When you are designing an RNA-seq experiment and deciding on the __sequence depth__ (or __coverage__) before sending your samples for sequencing, it referes to the __number of sequencing read__ you want to generate per sample. This decision is crucial because it impacts the sensitivity and resolution of your results, determining how well you can capture the transcriptome's full complexity.   
+
+## How long are transcripts?
+
+...
+
+## What is adapter contamination?
+
+Adapter contamination refers to the presence of adapter sequences in RNA-seq reads that were not fully removed during the library preparation process. Adapters are short, synthetic DNA sequences that are ligated to RNA or cDNA fragments during library preparation to facilitate sequencing. They are essential for binding the fragments to the sequencing platform and allow for amplification and sequencing. However, sometimes fragments of RNA or cDNA are too short, and the sequencing process reads into the adapter sequence. This results in "adapter contamination" in the sequencing data. 
+
+## When to align to genome and when to align to transcriptome?
 
 Deciding whether to align RNA-seq reads to a genome or transcriptome depends on your research goals and the type of analysis you are performing. 
 
@@ -129,7 +168,7 @@ When to align to the transcriptome:
 * __Pseudoalignment Methods__: For fast, lightweight quantification (e.g., tools like Salmon or Kallisto) that use pseudoalignment, transcriptome alignment is standard. 
 * __Single-Cell RNA-seq__: Single-cell RNA-seq analysis often uses transcriptome alignment or pseudoalignment, as the focus is typically on transcript quantification rather than novel discovery. 
 
-__What is pseudo-alignmend and why Kallisto and Salmon are faster?__
+## What is pseudo-alignment and why Kallisto and Salmon are faster?
 
 Pseudoalignment is a computational method used in RNA-seq analysis to assign reads directly to transcripts or genes without performing traditional base-by-base alignment to a reference genome or transcriptome. Instead of aligning reads precisely to a sequence, pseusoalignment focused on identifying the compatibility of a read with one or more transcripts. 
 
@@ -140,12 +179,7 @@ How does pseudoalignment work?
 * __Transcript compatibility__: The method determines a set of compatible transcripts for each read - i.e., the transcripts where the read could have originated. This avoids computing an exact alignment but still provides information about transcript-level expression. 
 * __Quantification__: Using a statistical model, pseudoalignment tools estimate the abundance of each transcript based on the number of reads compatible with it. 
 
-### Read Quantification
-
-* To count reads that mapped to genes or transcripts to generate a count matrix. 
-* Tools: `HTSeq`, `featureCounts`
-
-__When do I need to do read quantification? Is it every time for every type of analyses?__
+## When do I need to do read quantification? Is it every time for every type of analyses?
 
 Read quantification is the process of counting how many sequencing reads map to particular gene, transcript, or genomic feature. These counts represent the expression levels of genes or transcripts and are essential for comparing expression across samples.
 
@@ -163,48 +197,5 @@ When is read quantification not necessary?
 * Variant calling
 * Fusion transcript detection
 
-### Normalisation
-
-* Normalise counts to correct for sequencing depth and library size.
-* Tools: Built into `DESeq2`, `edgeR`, or `limma`.
-
-### Differential Gene Expression (DGE) Analysis
-
-* To identify genes that are differentially expressed between experimental conditions. 
-* Tools: `DESeq2`, `edgeR`, or `limma`.
-
-### Functional Annotation and Enrichment
-
-* Perform Gene Ontology (GO) or KEGG pathway analysis to interpret biological significance. 
-* Tools: `DAVID`, `clusterProfiler`, `GOseq`.
-
-__What is gene ontology and KEGG pathway? What are their application scenarios?__
-
-
-
-### Visualisation
-
-* Visulaise results with PCA, heatmaps, volcano plots, and more. 
-* Tools: `ggplot2`, `pheatmap`, `Seurat`.
-
-### Other Advanced Analyses
-
-* A
-
-
-...
-
-# title ????
-
-...............
-
-## What is Sequencing Depth?
-
-...
-
-## How long are transcripts?
-
-...
-
-# Data 
+## What is gene ontology and KEGG pathway? What are their application scenarios?
 
